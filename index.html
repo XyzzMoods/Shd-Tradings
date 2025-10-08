@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SHD - Trading Crypto</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet"/>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #0d0d0d;
+      color: #e0e0e0;
+      font-family: 'Orbitron', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      padding: 18px 20px;
+      text-align: center;
+      font-size: 26px;
+      font-weight: bold;
+      color: #00f57c;
+      position: relative;
+      letter-spacing: 1px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn.logout {
+      position: absolute;
+      right: 25px;
+      top: 55px;
+      background: #1a1a1a;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Orbitron', sans-serif;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .btn.logout:hover {
+      background: #ff3b3b;
+      color: #fff;
+      transform: scale(1.05);
+    }
+
+    #loginPage, #appPage {
+      display: none;
+      padding: 40px 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    h2, h3 {
+      color: #00f57c;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      background: #00f57c;
+      color: #000;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      font-family: 'Orbitron', sans-serif;
+      border-radius: 8px;
+      margin-top: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #04d66d;
+      transform: scale(1.05);
+    }
+
+    .btn.sell {
+      background: #ff3b3b;
+      color: #fff;
+      margin-left: 12px;
+    }
+
+    .btn.sell:hover {
+      background: #e83434;
+    }
+
+    input[type="text"], input[type="number"], select {
+      padding: 12px 16px;
+      background: #222;
+      color: white;
+      border: 1px solid #555;
+      border-radius: 8px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
+      width: 100%;
+      margin-bottom: 15px;
+      transition: border 0.3s ease;
+    }
+
+    input[type="text"]:focus, input[type="number"]:focus, select:focus {
+      border-color: #00f57c;
+      outline: none;
+    }
+
+    .saldo {
+      font-size: 16px;
+      margin: 15px 0 25px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .saldo svg {
+      width: 20px;
+      height: 20px;
+      color: #00f57c;
+    }
+
+    .pair-select {
+      margin-bottom: 20px;
+    }
+
+    .pair-select svg {
+      width: 18px;
+      height: 18px;
+      color: #00f57c;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+    .action-panel {
+      margin: 20px 0 30px 0;
+    }
+
+    #chart {
+      height: 400px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px #00f57c33;
+      margin-bottom: 30px;
+    }
+
+    #log, #history {
+      background: #111;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      margin-bottom: 20px;
+    }
+
+    #log p, #history p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: #000;
+      border-top: 1px solid #333;
+      color: #aaa;
+      font-size: 12px;
+      margin-top: 50px;
+    }
+
+    .center {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <i data-lucide="rocket"></i>
+    SHD - TRADING
+  </header>
+
+  <div id="loginPage" class="center">
+    <h2><i data-lucide="log-in"></i> Masuk ke Shd - Trades</h2>
+    <input type="text" id="usernameInput" placeholder="Masukkan Username Anda" />
+    <button class="btn" onclick="login()"><i data-lucide="arrow-right-circle"></i> Masuk</button>
+  </div>
+
+  <div id="appPage">
+    <div id="chart"></div>
+
+    <div class="saldo">
+      <i data-lucide="user"></i> <span id="username"></span> |
+      <i data-lucide="wallet"></i> Saldo: $<span id="balance">10000</span>
+    </div>
+
+    <div class="pair-select">
+      <i data-lucide="activity"></i> Pair:
+      <select id="pairSelect">
+        <option value="BINANCE:BTCUSDT">BTC/USDT</option>
+        <option value="BINANCE:ETHUSDT">ETH/USDT</option>
+        <option value="OANDA:EURUSD">EUR/USD</option>
+      </select>
+    </div>
+
+    <div class="action-panel">
+      <label for="amount"><i data-lucide="coins"></i> Jumlah ($):</label>
+      <input type="number" id="amount" value="100" placeholder="Masukkan jumlah trading"/>
+      <div>
+        <button class="btn" onclick="buy()"><i data-lucide="arrow-up-circle"></i> BUY</button>
+        <button class="btn sell" onclick="sell()"><i data-lucide="arrow-down-circle"></i> SELL</button>
+      </div>
+    </div>
+
+    <h3><i data-lucide="file-text"></i> Riwayat Transaksi</h3>
+    <div id="history"></div>
+
+    <h3><i data-lucide="list"></i> Log Aktivitas</h3>
+    <div id="log"></div>
+  </div>
+
+  <footer>© 2025 SHD - Trader By XyzzMoods</footer>
+
+  <script src="https://s3.tradingview.com/tv.js"></script>
+  <script>
+    let userData = {};
+    let currentUser = "";
+
+    function saveData() {
+      localStorage.setItem("tradingUsers", JSON.stringify(userData));
+    }
+
+    function loadData() {
+      const saved = localStorage.getItem("tradingUsers");
+      if (saved) userData = JSON.parse(saved);
+    }
+
+    function login() {
+      const name = document.getElementById("usernameInput").value.trim();
+      if (!name) return alert("Masukkan username!");
+
+      currentUser = name;
+      if (!userData[currentUser]) {
+        userData[currentUser] = { balance: 10000, history: [] };
+      }
+      saveData();
+      showApp();
+    }
+
+    function logout() {
+      currentUser = "";
+      document.getElementById("appPage").style.display = "none";
+      document.getElementById("loginPage").style.display = "block";
+    }
+
+    function showApp() {
+      document.getElementById("loginPage").style.display = "none";
+      document.getElementById("appPage").style.display = "block";
+      document.getElementById("username").innerText = currentUser;
+      updateDisplay();
+    }
+
+    function updateDisplay() {
+      document.getElementById("balance").innerText = userData[currentUser].balance.toFixed(2);
+      const h = userData[currentUser].history;
+      document.getElementById("history").innerHTML = h.length === 0
+        ? "<p>Tidak ada transaksi.</p>"
+        : h.map(x => `<p>${x}</p>`).reverse().join("");
+    }
+
+    function log(text) {
+      const el = document.getElementById("log");
+      el.innerHTML = `<p>${text}</p>` + el.innerHTML;
+    }
+
+    function buy() {
+      const amount = parseFloat(document.getElementById("amount").value);
+      if (userData[currentUser].balance < amount) return alert("Saldo tidak cukup!");
+      userData[currentUser].balance -= amount;
+      const pair = document.getElementById("pairSelect").value;
+      const text = `BUY ${pair} sebesar $${amount}`;
+      userData[currentUser].history.push(text);
+      updateDisplay();
+      saveData();
+      log(text);
+    }
+
+    function sell() {
+      const amount = parseFloat(document.getElementById("amount").value);
+      userData[currentUser].balance += amount;
+      const pair = document.getElementById("pairSelect").value;
+      const text = `SELL ${pair} sebesar $${amount}`;
+      userData[currentUser].history.push(text);
+      updateDisplay();
+      saveData();
+      log(text);
+    }
+
+    loadData();
+    logout();
+
+    const widget = new TradingView.widget({
+      container_id: "chart",
+      width: "100%",
+      height: 400,
+      symbol: "BINANCE:BTCUSDT",
+      interval: "15",
+      timezone: "Etc/UTC",
+      theme: "dark",
+      style: "1",
+      locale: "en",
+      toolbar_bg: "#111",
+      enable_publishing: false,
+      hide_side_toolbar: true,
+      allow_symbol_change: true,
+    });
+
+    document.getElementById('pairSelect').addEventListener('change', function () {
+      const pair = this.value;
+      widget.setSymbol(pair);
+    });
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>
